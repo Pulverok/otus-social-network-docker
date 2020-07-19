@@ -1,0 +1,3 @@
+/db/recreate-tool/composer.lock
+/db/schema/create_schema.sql
+/db/recreate-tool/vendor/

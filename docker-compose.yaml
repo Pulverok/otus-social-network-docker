@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  nginx:
+    build:
+      context: images/nginx
+    volumes:
+      - ./config/nginx/:/etc/nginx/conf.d:cached
+      - ./config/nginx/logs:/var/log/nginx:cached
+    ports:
+      - "80"
+    restart: always
+    networks:
+      otus:
+        ipv4_address: 192.168.30.5
+    depends_on:
+      - php
+  php:
+    build:
+      context: images/php74
+    volumes:
+      - ../otus-social-network-api:/var/www/otus-social-network-api:cached
+      - ../otus-social-network-db:/var/www/otus-social-network-db:cached
+      - ./db:/var/www/tools:cached
+    working_dir: /var/www/
+    restart: always
+    networks:
+      otus:
+        ipv4_address: 192.168.30.20
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - ../otus-social-network-db:/var/tmp/mysql/data:cached
+    networks:
+      otus:
+        ipv4_address: 192.168.30.10
+
+networks:
+  otus:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.30.0/24
