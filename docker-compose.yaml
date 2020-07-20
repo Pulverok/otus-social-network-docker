@@ -28,7 +28,7 @@ services:
       otus:
         ipv4_address: 192.168.30.20
   mysql:
-    image: mysql:8.0
+    image: mariadb:10.5
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -38,6 +38,7 @@ services:
       - '3306'
     volumes:
       - ../otus-social-network-db:/var/tmp/mysql/data:cached
+      - ./config/mysql/custom.cnf:/etc/mysql/conf.d/custom.cnf
     networks:
       otus:
         ipv4_address: 192.168.30.10
